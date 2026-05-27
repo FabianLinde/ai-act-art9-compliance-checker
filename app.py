@@ -3,11 +3,11 @@ from pyshacl import validate
 import rdflib
 
 # 1. Set up the Web Page Layout
-st.set_page_config(page_title="AI Act Compliance Checker", page_icon="⚖️", layout="wide")
+st.set_page_config(page_title="AI Act Compliance Checker", page_icon="⚖️")
 st.title("⚖️ AI Act SHACL Compliance Checker")
 st.write("Verify a semantic risk management model against EU AI Act SHACL constraints.")
 
-# 2. Embed the Sample Model Template
+# 2. Embed the Sample Model Template (Tucked away inside code variables)
 DEFAULT_MODEL = """@prefix sh:   <http://www.w3.org/ns/shacl#> .
 @prefix dpv:  <http://w3id.org/dpv#> .
 @prefix risk: <https://w3id.org/dpv/risk#> .
@@ -63,36 +63,34 @@ ex:HighSeverity a dpv:Severity .
 ex:HighLikelihood a dpv:Likelihood .
 """
 
-# 3. Setup Interface Tabs
-tab1, tab2 = st.tabs(["✍️ Edit Model Directly", "📁 Upload Model File"])
+# 3. Primary UI Feature: File Uploader
+st.subheader("📁 Primary Action: Upload Model File")
+uploaded_file = st.file_uploader("Choose a compliance risk model file (.ttl)", type=['ttl'])
 
+# Variables to hold our targeted active data
 ttl_data = None
 source_name = ""
 
-with tab1:
-    st.subheader("Interactive Turtle Editor")
-    st.write("Modify the graph below directly, then click the evaluation button.")
-    
-    # Large textbox displaying the default model
+# 4. Secondary UI Feature: Collapsible Sample Sandbox
+st.write("---") # Visual divider line
+with st.expander("💡 Don't have a file? View, edit, or test with our built-in compliant model"):
+    st.write("You can modify this Turtle code directly inside the box to test how the constraints behave.")
     edited_code = st.text_area(
-        label="Turtle Data (TTL)", 
+        label="Sample Data (TTL)", 
         value=DEFAULT_MODEL, 
-        height=450, 
-        help="Change values, classes, or properties to test failures!"
+        height=300
     )
-    
-    if st.button("Run Compliance Check", type="primary"):
-        ttl_data = edited_code
-        source_name = "Interactive Editor"
+    run_sample = st.button("Run Compliance on Sample Data", type="secondary")
 
-with tab2:
-    st.subheader("Upload a Custom Model")
-    uploaded_file = st.file_uploader("Upload Risk Model (.ttl)", type=['ttl'])
-    if uploaded_file is not None:
-        ttl_data = uploaded_file
-        source_name = uploaded_file.name
+# Determine which action the user chose
+if uploaded_file is not None:
+    ttl_data = uploaded_file
+    source_name = uploaded_file.name
+elif run_sample:
+    ttl_data = edited_code
+    source_name = "Interactive Sample Data"
 
-# 4. Unified Processing Engine
+# 5. Unified Processing Engine
 if ttl_data is not None:
     st.divider()
     st.subheader(f"Validation Report ({source_name})")
@@ -101,9 +99,9 @@ if ttl_data is not None:
     shacl_graph = rdflib.Graph()
     
     try:
-        # Dynamically parse based on string text input vs. file upload
+        # Dynamically parse based on string text input vs. file upload wrapper
         if isinstance(ttl_data, str):
-            print("\n[DEBUG] Parsing text from interactive editor...")
+            print("\n[DEBUG] Parsing text from interactive expander...")
             data_graph.parse(data=ttl_data, format="turtle")
         else:
             print(f"\n[DEBUG] Parsing uploaded file: {source_name}...")
@@ -126,7 +124,7 @@ if ttl_data is not None:
             )
             print("[DEBUG] PySHACL validation finished successfully!")
             
-        # 5. Display the Results
+        # 6. Display the Results
         if conforms:
             st.balloons()
             st.success("✅ **COMPLIANT:** The model satisfies all SHACL constraints!")
