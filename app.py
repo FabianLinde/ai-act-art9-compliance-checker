@@ -5,7 +5,7 @@ import rdflib
 # 1. Set up the Web Page Layout
 st.set_page_config(page_title="AI Act Compliance Checker", page_icon="⚖️")
 st.title("⚖️ AI Act SHACL Compliance Checker")
-st.write("Verify a semantic Risk Management Model against the requirements of Article 9 of the EU AI Act. This tool uses SHACL constraints defined in `rules.shacl` to validate your model's compliance. You can upload your own Turtle file or use the interactive sample below.")
+st.write("Verify a semantic risk management model against the requirements of Article 9 of the EU AI Act. This tool uses SHACL constraints defined in `rules.shacl` to validate your model's compliance. You can upload your own Turtle file or use the interactive sample below.")
 
 # 2. Dynamically Load the Sample Model Template from local file
 try:
@@ -14,9 +14,16 @@ try:
 except FileNotFoundError:
     sample_model = "# Error: sample_model.ttl file missing from repository."
 
+# Dynamically Load the SHACL Rules for UI viewing
+try:
+    with open("rules.shacl", "r", encoding="utf-8") as f:
+        shacl_rules = f.read()
+except FileNotFoundError:
+    shacl_rules = "# Error: rules.shacl file missing from repository."
+
 # 3. Primary UI Feature: File Uploader
 st.subheader("📁 Upload Model File")
-uploaded_file = st.file_uploader("Choose a Risk Management Model file (.ttl)", type=['ttl'])
+uploaded_file = st.file_uploader("Choose a risk management model file (.ttl)", type=['ttl'])
 
 # Variables to hold our targeted active data
 ttl_data = None
@@ -24,7 +31,7 @@ source_name = ""
 
 # 4. Secondary UI Feature: Collapsible Sample Sandbox
 st.write("---") 
-with st.expander("💡 Don't have a file? View, edit, or test with our built-in compliant model"):
+with st.expander("💡 Don't have a file? View, edit, or test with our built-in compliant risk management model."):
     st.write("You can modify this Turtle code directly inside the box to test how the constraints behave.")
     edited_code = st.text_area(
         label="Sample Model (TTL)", 
@@ -32,6 +39,11 @@ with st.expander("💡 Don't have a file? View, edit, or test with our built-in 
         height=300
     )
     run_sample = st.button("Run Compliance on Sample Model", type="secondary")
+
+# New Collapsible Viewer: Inspect the rules.shacl file
+with st.expander("🔍 Inspect the Validation Logic (rules.shacl)"):
+    st.write("These are the SHACL graph constraints enforcing EU AI Act Art. 9 mappings on the risk management model structure:")
+    st.code(shacl_rules, language="turtle")
 
 # Determine which action the user chose
 if uploaded_file is not None:
