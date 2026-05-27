@@ -3,7 +3,7 @@ from pyshacl import validate
 import rdflib
 
 # 1. Set up the Web Page Layout
-st.set_page_config(page_title="AI Act Compliance Checker", page_icon="⚖️")
+st.set_page_config(page_title="AI Act Art. 9 Compliance Checker", page_icon="⚖️")
 st.title("⚖️ AI Act Art. 9 Risk Management Compliance Checker")
 st.write("Verify a semantic risk management model against the requirements of Article 9 of the EU AI Act. This tool uses SHACL constraints defined in `rules.shacl` to validate your model's compliance. You can upload your own Turtle file or use the interactive sample below.")
 st.write("This application has been developed by [Fabian Linde](https://linkedin.com/in/fabianlinde) for deliverable D2.4 of the [HARNESS](https://harness-network.eu/index.html) project.")
