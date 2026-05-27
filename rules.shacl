@@ -1,0 +1,159 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix dpv:  <http://w3id.org/dpv#> .
+@prefix risk: <https://w3id.org/dpv/risk#> .
+@prefix eu:     <https://w3id.org/dpv/legal/eu#> .
+@prefix tech:   <https://w3id.org/dpv/tech#> .
+@prefix euaiact:   <https://w3id.org/dpv/legal/eu/aiact#> .
+@prefix ex:    <http://example.org/#> .
+
+
+
+
+
+ex:HighRiskAISystem
+    a sh:NodeShape ;
+    sh:targetClass euaiact:HighRiskAISystem ;
+
+    #  O.1
+    sh:property [
+        sh:path risk:hasRiskManagement ;
+        sh:minCount 1 ;
+        sh:class risk:RiskManagement ; 
+        sh:node ex:RiskManagementShape ;
+        ] ;
+
+
+    # O.20
+    sh:property [
+        sh:path tech:hasDocumentation ;
+        sh:minCount 1 ;
+        sh:class euaiact:InstructionsForUse ;
+        ] ;
+
+
+    # O.21
+    sh:property [
+        sh:path tech:hasProvider ;
+        sh:qualifiedValueShape [
+            sh:class euaiact:AIProvider ;
+            sh:property [
+                sh:path dpv:hasOrganisationalMeasure ;
+                sh:minCount 1 ;
+                sh:class euaiact:TrainingForDeployer ; #Proposed concept
+                ] ;
+            ] ;
+        sh:qualifiedMinCount 1 ;
+        ] .
+
+
+
+
+ex:RiskManagementShape
+    a sh:NodeShape ;
+    sh:targetClass risk:RiskManagement ;
+
+    # O.2
+    sh:property [
+        sh:path risk:hasRiskAssessment ;
+        sh:minCount 1 ;
+        sh:class risk:RiskAssessment ; 
+        sh:node ex:RiskAssessmentShape ;
+        ] .
+
+
+
+ex:RiskAssessmentShape
+    a sh:NodeShape ;
+    sh:targetClass risk:RiskAssessment ;
+
+    # O.9
+    sh:property [
+        sh:path risk:hasRiskIdentification ;
+        sh:minCount 1 ;
+        sh:class risk:RiskIdentification ; 
+        sh:node ex:RiskIdentificationShape ;
+        ] .
+
+
+ex:RiskIdentificationShape
+    a sh:NodeShape ;
+    sh:targetClass risk:RiskIdentification ;
+
+    # O.9.3
+    sh:property [
+        sh:path risk:identifies ;
+        sh:minCount 1 ;
+        sh:class risk:Risk ; 
+        sh:node ex:RiskShape ;
+        ] .
+
+
+ex:RiskShape
+    a sh:NodeShape ;
+    sh:targetClass risk:Risk ;
+
+
+    # O.9.2
+    sh:property [
+        sh:path risk:hasRiskSource ;
+        sh:minCount 1 ;
+        sh:class risk:RiskSource ; ] ;
+
+
+    # O.9.5, O.10.1, O.10.2
+    sh:property [
+        sh:path dpv:hasConsequence ;
+        sh:qualifiedValueShape [
+            sh:class dpv:Consequence ;
+
+            # O.9.5
+            sh:property [
+                sh:path dpv:hasConsequenceOn ;
+                sh:or (
+                    [ sh:class risk:Health ]
+                    [ sh:class risk:Safety ]
+                    [ sh:class eu:EUFundamentalRightsImpact ]
+                ) ;
+                sh:minCount 1 ;
+                ] ;
+
+            # O.10.1
+            sh:property [
+                sh:path dpv:hasSeverity ;
+                sh:minCount 1 ;
+                sh:class dpv:Severity ;
+                ] ;
+
+            # O.10.2
+            sh:property [
+                sh:path dpv:hasLikelihood ;
+                sh:minCount 1 ;
+                sh:class dpv:Likelihood ;
+                ] ;
+            ] ;
+        sh:qualifiedMinCount 1 ;
+        ] ;
+
+
+    # O.16
+    sh:property [
+        sh:path risk:hasRiskTreatment ;
+        sh:minCount 1 ;
+        sh:class risk:RiskTreatment ;
+        ] ;
+
+
+    # O.9.4, O.19
+    sh:property [
+        sh:path risk:hasRiskControl ;
+        sh:minCount 1 ;
+        sh:class risk:RiskControl ;
+        ] ;
+
+
+    # O.11 - O.15
+    sh:property [
+        sh:path risk:hasRiskEvaluation ;
+        sh:minCount 1 ;
+        sh:class risk:RiskEvaluation ;
+        ] .

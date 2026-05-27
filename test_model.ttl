@@ -1,0 +1,53 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix dpv:  <http://w3id.org/dpv#> .
+@prefix risk: <https://w3id.org/dpv/risk#> .
+@prefix eu:     <https://w3id.org/dpv/legal/eu#> .
+@prefix tech:   <https://w3id.org/dpv/tech#> .
+@prefix euaiact:   <https://w3id.org/dpv/legal/eu/aiact#> .
+@prefix ex:    <http://example.org/#> .
+
+# 1. The Core System
+ex:MySystem a euaiact:HighRiskAISystem ;
+    tech:hasDocumentation ex:MyDocs ;
+    tech:hasProvider ex:MyProvider ;
+    risk:hasRiskManagement ex:MyRiskManagement .
+
+ex:MyDocs a euaiact:InstructionsForUse .
+
+# 2. Provider & Training
+ex:MyProvider a euaiact:AIProvider ;
+    dpv:hasOrganisationalMeasure ex:MyTraining .
+ex:MyTraining a euaiact:TrainingForDeployer .
+
+# 3. Risk Management Pipeline
+ex:MyRiskManagement a risk:RiskManagement ;
+    risk:hasRiskAssessment ex:MyAssessment .
+
+ex:MyAssessment a risk:RiskAssessment ;
+    risk:hasRiskIdentification ex:MyIdentification .
+
+ex:MyIdentification a risk:RiskIdentification ;
+    risk:identifies ex:MyRisk .
+
+# 4. The Risk Details
+ex:MyRisk a risk:Risk ;
+    risk:hasRiskSource ex:MySource ;
+    dpv:hasConsequence ex:MyConsequence ;
+    risk:hasRiskTreatment ex:MyTreatment ;
+    risk:hasRiskControl ex:MyControl ;
+    risk:hasRiskEvaluation ex:MyEvaluation .
+
+ex:MySource a risk:RiskSource .
+ex:MyTreatment a risk:RiskTreatment .
+ex:MyControl a risk:RiskControl .
+ex:MyEvaluation a risk:RiskEvaluation .
+
+# 5. Consequences
+ex:MyConsequence a dpv:Consequence ;
+    dpv:hasConsequenceOn ex:HealthImpact ;
+    dpv:hasSeverity ex:HighSeverity ;
+    dpv:hasLikelihood ex:HighLikelihood .
+
+ex:HealthImpact a risk:Health .
+ex:HighSeverity a dpv:Severity .
+ex:HighLikelihood a dpv:Likelihood .
