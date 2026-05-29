@@ -7,9 +7,6 @@
 @prefix ex:    <http://example.org/#> .
 
 
-
-
-
 ex:HighRiskAISystem
     a sh:NodeShape ;
     sh:targetClass euaiact:HighRiskAISystem ;
@@ -134,15 +131,6 @@ ex:RiskShape
         sh:qualifiedMinCount 1 ;
         ] ;
 
-
-    # O.16
-    sh:property [
-        sh:path risk:hasRiskTreatment ;
-        sh:minCount 1 ;
-        sh:class risk:RiskTreatment ;
-        ] ;
-
-
     # O.9.4, O.19
     sh:property [
         sh:path risk:hasRiskControl ;
@@ -156,4 +144,18 @@ ex:RiskShape
         sh:path risk:hasRiskEvaluation ;
         sh:minCount 1 ;
         sh:class risk:RiskEvaluation ;
+        ] ;
+
+    # O.16
+    sh:property [
+        sh:path risk:hasRiskTreatment ;
+        sh:minCount 1 ;
+        sh:class risk:RiskTreatment ;
+        ] ;
+
+    # O.17
+    sh:property [
+        sh:path risk:hasResidualRisk ;
+        sh:minCount 0 ;
+        sh:class risk:ResidualRisk ;
         ] .

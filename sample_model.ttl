@@ -35,12 +35,14 @@ ex:MyRisk a risk:Risk ;
     dpv:hasConsequence ex:MyConsequence ;
     risk:hasRiskTreatment ex:MyTreatment ;
     risk:hasRiskControl ex:MyControl ;
-    risk:hasRiskEvaluation ex:MyEvaluation .
+    risk:hasRiskEvaluation ex:MyEvaluation ;
+    risk:hasResidualRisk ex:MyResidualRisk .
 
 ex:MySource a risk:RiskSource .
 ex:MyTreatment a risk:RiskTreatment .
 ex:MyControl a risk:RiskControl .
 ex:MyEvaluation a risk:RiskEvaluation .
+ex:MyResidualRisk a risk:ResidualRisk .
 
 # 5. Consequences
 ex:MyConsequence a dpv:Consequence ;
